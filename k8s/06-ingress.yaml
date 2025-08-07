@@ -1,0 +1,41 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: agroflow-ingress
+  namespace: agroflow
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: agroflow.local
+      http:
+        paths:
+          - path: /api/central
+            pathType: Prefix
+            backend:
+              service:
+                name: ms-central-svc
+                port:
+                  number: 8081
+          - path: /api/inventario
+            pathType: Prefix
+            backend:
+              service:
+                name: ms-inventario-svc
+                port:
+                  number: 8082
+          - path: /api/facturacion
+            pathType: Prefix
+            backend:
+              service:
+                name: ms-facturacion-svc
+                port:
+                  number: 8083
+          - path: /rabbitmq
+            pathType: Prefix
+            backend:
+              service:
+                name: rabbitmq-svc
+                port:
+                  number: 15672

@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-facturacion
+  namespace: agroflow
+  labels:
+    app: ms-facturacion
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ms-facturacion
+  template:
+    metadata:
+      labels:
+        app: ms-facturacion
+    spec:
+      containers:
+      - name: ms-facturacion
+        image: agroflow-ms-facturacion:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8083
+        env:
+        - name: SPRING_APPLICATION_NAME
+          value: "ms-facturacion"
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:postgresql://postgresql-svc:5432/agroflow_facturacion"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "postgres"
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "admin123"
+        - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+          value: "org.postgresql.Driver"
+        - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+          value: "update"
+        - name: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
+          value: "org.hibernate.dialect.PostgreSQLDialect"
+        - name: SPRING_JPA_SHOW_SQL
+          value: "true"
+        - name: SPRING_RABBITMQ_HOST
+          value: "rabbitmq-svc"
+        - name: SPRING_RABBITMQ_PORT
+          value: "5672"
+        - name: SPRING_RABBITMQ_USERNAME
+          value: "admin"
+        - name: SPRING_RABBITMQ_PASSWORD
+          value: "admin123"
+        - name: AGROFLOW_MS_CENTRAL_URL
+          value: "http://ms-central-svc:8081"
+        - name: SERVER_PORT
+          value: "8083"
+        - name: LOGGING_LEVEL_COM_AGROFLOW_MS_FACTURACION
+          value: "INFO"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ms-facturacion-svc
+  namespace: agroflow
+spec:
+  selector:
+    app: ms-facturacion
+  ports:
+  - port: 8083
+    targetPort: 8083
+  type: ClusterIP

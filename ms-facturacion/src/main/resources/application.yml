@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: ms-facturacion
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/agroflow_facturacion
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+server:
+  port: 8083
+
+# Configuración de URLs de otros microservicios
+agroflow:
+  ms-central:
+    url: http://localhost:8081
+
+logging:
+  level:
+    com.agroflow.ms_facturacion: INFO

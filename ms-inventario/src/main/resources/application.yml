@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: ms-inventario
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/agroflow_inventario
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+server:
+  port: 8082
+
+logging:
+  level:
+    com.agroflow.ms_inventario: INFO

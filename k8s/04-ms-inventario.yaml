@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-inventario
+  namespace: agroflow
+  labels:
+    app: ms-inventario
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ms-inventario
+  template:
+    metadata:
+      labels:
+        app: ms-inventario
+    spec:
+      containers:
+      - name: ms-inventario
+        image: agroflow-ms-inventario:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8082
+        env:
+        - name: SPRING_APPLICATION_NAME
+          value: "ms-inventario"
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:postgresql://postgresql-svc:5432/agroflow_inventario"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "postgres"
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "admin123"
+        - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+          value: "org.postgresql.Driver"
+        - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+          value: "update"
+        - name: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
+          value: "org.hibernate.dialect.PostgreSQLDialect"
+        - name: SPRING_JPA_SHOW_SQL
+          value: "true"
+        - name: SPRING_RABBITMQ_HOST
+          value: "rabbitmq-svc"
+        - name: SPRING_RABBITMQ_PORT
+          value: "5672"
+        - name: SPRING_RABBITMQ_USERNAME
+          value: "admin"
+        - name: SPRING_RABBITMQ_PASSWORD
+          value: "admin123"
+        - name: SERVER_PORT
+          value: "8082"
+        - name: LOGGING_LEVEL_COM_AGROFLOW_MS_INVENTARIO
+          value: "INFO"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ms-inventario-svc
+  namespace: agroflow
+spec:
+  selector:
+    app: ms-inventario
+  ports:
+  - port: 8082
+    targetPort: 8082
+  type: ClusterIP
